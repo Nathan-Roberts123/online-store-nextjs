@@ -32,3 +32,9 @@ export const ZProduct = z.object({
 });
 
 export type TProduct = z.infer<typeof ZProduct>;
+
+export const ZCart = z.object({
+  product: ZProduct.array(),
+});
+
+export type TCart = z.infer<typeof ZCart>;

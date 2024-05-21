@@ -2,8 +2,15 @@ import React from "react";
 import image from "../../assets/img/product/prodcut-3.jpg";
 import Image from "next/image";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { GoPencil } from "react-icons/go";
 
-const Product = () => {
+interface ProductProps {
+  type?: "admin" | "store";
+}
+
+const Product = (props: ProductProps) => {
+  const { type } = props;
+
   return (
     <div className="rounded-md bg-white border-gray6 border">
       <div className="relative">
@@ -20,7 +27,11 @@ const Product = () => {
           <div className="flex flex-col items-center justify-center space-y-2">
             <div className="relative">
               <button className="p-2 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600 flex items-center justify-center">
-                <MdOutlineAddShoppingCart fontSize="20px" />
+                {type === "store" || !type ? (
+                  <MdOutlineAddShoppingCart fontSize="20px" />
+                ) : (
+                  <GoPencil fontSize="20px" />
+                )}
               </button>
             </div>
           </div>

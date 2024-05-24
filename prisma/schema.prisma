@@ -20,6 +20,7 @@ model User {
   email         String          @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   accounts      Account[]
   sessions      Session[]
   // Optional for WebAuthn support
@@ -27,7 +28,7 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Cart      Cart?
+  Cart      Cart[]
 }
 
 model Account {
@@ -85,13 +86,20 @@ model Authenticator {
   @@id([userId, credentialID])
 }
 
+enum Status {
+  Active
+  InActive
+}
+
 model Product {
-  id     String  @id @default(cuid())
-  name   String
-  price  Int
-  image  String
-  Cart   Cart?   @relation(fields: [cartId], references: [id])
-  cartId String?
+  id       String @id @default(cuid())
+  name     String
+  price    Float
+  image    String
+  status   Status
+  suk      String
+  quantity Int
+  Cart     Cart[]
 }
 
 model Cart {

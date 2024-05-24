@@ -10,6 +10,10 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string(),
     WEBHOOK_SECRET: z.string(),
     AWS_SES_REGION: z.string(),
+    AWS_BUCKET_REGION: z.string(),
+    AWS_ACCESS_KEY_ID: z.string(),
+    AWS_SECRET_ACCESS_KEY: z.string(),
+    AWS_BUCKET_NAME: z.string(),
     NEXTAUTH_URL:
       process.env.NODE_ENV === "production"
         ? z.string()
@@ -31,5 +35,9 @@ export const env = createEnv({
     WEBHOOK_SECRET: process.env.WEBHOOK_SECRET,
     AWS_SES_REGION: process.env.AWS_SES_REGION,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    AWS_BUCKET_REGION: process.env.AWS_BUCKET_REGION,
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
   },
 });

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { procedure, router } from "../trpc";
 import stripe from "@/utils/stripe/config";
 import productRouter from "./product";
+import { userRouter } from "./user";
 
 export const appRouter = router({
   createPaymentIntent: procedure
@@ -15,6 +16,7 @@ export const appRouter = router({
       return { clientSecret: paymentIntent.client_secret };
     }),
   product: productRouter,
+  user: userRouter,
 });
 
 // export type definition of API

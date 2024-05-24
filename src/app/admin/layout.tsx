@@ -1,3 +1,5 @@
+"use client";
+
 import OrdersIcon from "@/components/icons/orders";
 import ProductIcon from "@/components/icons/product";
 import React from "react";

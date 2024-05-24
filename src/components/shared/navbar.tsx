@@ -1,10 +1,8 @@
-import React from "react";
-import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/authOptions";
+"use client";
+import { signOut, useSession } from "next-auth/react";
 
-const Navbar = async () => {
-  const session = await getServerSession(authOptions);
+const Navbar = () => {
+  const { data: session } = useSession();
 
   return (
     <header className="relative z-10 bg-white border-b border-gray border-solid py-5 px-8 pr-8">
@@ -33,7 +31,9 @@ const Navbar = async () => {
             </svg>
           </button>
           <span>{session?.user?.name}</span>
-          <Link href="#">Logout</Link>
+          <button className="border-none bg-none" onClick={() => signOut()}>
+            Logout
+          </button>
         </div>
       </div>
     </header>

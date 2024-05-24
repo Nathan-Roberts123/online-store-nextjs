@@ -1,6 +1,7 @@
 import React from "react";
 import GoogleButton from "./google-button";
 import Link from "next/link";
+import Image from "next/image";
 
 const Header = ({ type }: { type: "signin" | "signup" }) => {
   return (
@@ -49,10 +50,15 @@ const Wrapper = ({
         <div className="">
           <div className="grid grid-cols-12 shadow-lg bg-white overflow-hidden rounded-md ">
             <div className="col-span-4 lg:col-span-6 relative h-full hidden lg:block">
-              <div
-                className="data-bg absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat"
-                data-bg="assets/img/bg/login-bg.jpg"
-              ></div>
+              <div className="data-bg absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat">
+                <Image
+                  objectFit="cover"
+                  layout="fill"
+                  objectPosition="left"
+                  src="/sign-bg-image.jpg"
+                  alt="Signup image"
+                />
+              </div>
             </div>
 
             <div className="col-span-12 lg:col-span-6 md:w-[500px] mx-auto my-auto  pt-[50px] py-[60px] px-5 md:px-[60px]">

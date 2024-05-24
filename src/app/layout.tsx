@@ -8,6 +8,7 @@ import StripeProvider from "@/providers/stripe-provider";
 import { SessionProvider } from "@/providers/session-provider";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/authOptions";
+import ToastProvider from "@/providers/toast-provider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,7 +29,9 @@ export default async function RootLayout({
           <AppRouterCacheProvider options={{ key: "css" }}>
             <ThemeProvider theme={theme}>
               <StripeProvider>
-                <SessionProvider session={session}>{children}</SessionProvider>
+                <SessionProvider session={session}>
+                  <ToastProvider>{children}</ToastProvider>
+                </SessionProvider>
               </StripeProvider>
             </ThemeProvider>
           </AppRouterCacheProvider>

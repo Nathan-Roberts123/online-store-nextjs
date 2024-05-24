@@ -1,7 +1,18 @@
 import { z } from "zod";
+import { zfd } from "zod-form-data";
+
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+
+const statusValues = ["Active", "InActive"] as const;
 
 export const ZSignupFormState = z
   .object({
+    username: z.string().min(2),
     email: z.string().email(),
     password: z.string().min(4),
     confirm_password: z.string(),
@@ -26,9 +37,21 @@ export const ZSigninFormState = z.object({
 export type TSigninFormState = z.infer<typeof ZSigninFormState>;
 
 export const ZProduct = z.object({
-  name: z.string(),
-  price: z.number(),
-  image: z.string().url(),
+  name: z.string().min(2),
+  price: z.coerce.number(),
+  image: z
+    .any()
+    .refine((file) => {
+      return !!file;
+    }, "Image is required")
+    .refine((file) => {
+      if (!!file) {
+        return ACCEPTED_IMAGE_TYPES.includes(file[0].type);
+      }
+    }, "Only .jpg, .jpeg, .png and .webp formats are supported."),
+  status: z.enum(statusValues),
+  suk: z.string().min(2),
+  quantity: z.coerce.number(),
 });
 
 export type TProduct = z.infer<typeof ZProduct>;
@@ -38,3 +61,20 @@ export const ZCart = z.object({
 });
 
 export type TCart = z.infer<typeof ZCart>;
+
+export const ZFProuct = zfd.formData({
+  name: zfd.text(),
+  price: zfd.numeric(),
+  image: zfd.file(),
+  suk: zfd.text(),
+  status: zfd.text(z.enum(statusValues)),
+  quantity: zfd.numeric(),
+});
+
+export const ZUser = z.object({
+  name: z.string(),
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export type TUser = z.infer<typeof ZUser>;

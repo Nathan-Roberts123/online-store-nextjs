@@ -1,37 +1,42 @@
 import React from "react";
-import image from "../../assets/img/product/prodcut-3.jpg";
 import Image from "next/image";
 import { MdOutlineAddShoppingCart } from "react-icons/md";
-import { GoPencil } from "react-icons/go";
+import { trpc } from "@/utils/trpc";
 
 interface ProductProps {
-  type?: "admin" | "store";
+  id: string;
+  imageUrl: string;
+  name: string;
+  price: number;
 }
 
 const Product = (props: ProductProps) => {
-  const { type } = props;
+  const mutation = trpc.product.addToCart.useMutation();
+
+  const handleAddToCart = () => {
+    mutation.mutate({ productId: props.id });
+  };
 
   return (
     <div className="rounded-md bg-white border-gray6 border">
-      <div className="relative">
+      <div className="relative h-80">
         <a href="#">
           <Image
             className="w-full"
-            width={350}
-            height={500}
-            src={image}
+            objectFit="cover"
+            layout="fill"
+            src={props.imageUrl}
             alt=""
           />
         </a>
         <div className="absolute top-5 right-5 z-10">
           <div className="flex flex-col items-center justify-center space-y-2">
             <div className="relative">
-              <button className="p-2 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600 flex items-center justify-center">
-                {type === "store" || !type ? (
-                  <MdOutlineAddShoppingCart fontSize="20px" />
-                ) : (
-                  <GoPencil fontSize="20px" />
-                )}
+              <button
+                onClick={handleAddToCart}
+                className="p-2 leading-10 text-tiny bg-success text-white rounded-md hover:bg-green-600 flex items-center justify-center"
+              >
+                <MdOutlineAddShoppingCart fontSize="20px" />
               </button>
             </div>
           </div>
@@ -42,7 +47,7 @@ const Product = (props: ProductProps) => {
           href="#"
           className="text-lg font-normal text-heading text-hover-primary mb-2 inline-block leading-none"
         >
-          Women&apos;s Essentials Shoes
+          {props.name}
         </a>
 
         <div className="flex items-center space-x-1 text-tiny mb-5">
@@ -55,7 +60,9 @@ const Product = (props: ProductProps) => {
           </span>
         </div>
         <div className="leading-none mb-2">
-          <span className="text-base font-medium text-black">$350.00</span>
+          <span className="text-base font-medium text-black">
+            ${props.price}
+          </span>
         </div>
       </div>
     </div>

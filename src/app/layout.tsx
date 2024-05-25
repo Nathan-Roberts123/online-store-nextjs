@@ -25,17 +25,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className="h-lvh">
-        <TrpcProvider>
-          <AppRouterCacheProvider options={{ key: "css" }}>
-            <ThemeProvider theme={theme}>
-              <StripeProvider>
-                <SessionProvider session={session}>
+        <SessionProvider session={session}>
+          <TrpcProvider>
+            <AppRouterCacheProvider options={{ key: "css" }}>
+              <ThemeProvider theme={theme}>
+                <StripeProvider>
                   <ToastProvider>{children}</ToastProvider>
-                </SessionProvider>
-              </StripeProvider>
-            </ThemeProvider>
-          </AppRouterCacheProvider>
-        </TrpcProvider>
+                </StripeProvider>
+              </ThemeProvider>
+            </AppRouterCacheProvider>
+          </TrpcProvider>
+        </SessionProvider>
       </body>
     </html>
   );

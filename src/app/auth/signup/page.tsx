@@ -5,7 +5,7 @@ import Wrapper from "../components/wrapper";
 import FieldLabel from "@/components/forms/field-label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ZSignupFormState, TSignupFormState } from "@/type";
+import { ZSignupFormState, TSignupFormState } from "@/types";
 import FeildErrorMessage from "@/components/forms/field-error-message";
 import { trpc } from "@/utils/trpc";
 import useToast from "@/hooks/useToast";

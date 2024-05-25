@@ -4,7 +4,7 @@ import Wrapper from "../components/wrapper";
 import FieldLabel from "@/components/forms/field-label";
 import FormControl from "@/components/forms/form-control";
 import { useForm } from "react-hook-form";
-import { TSigninFormState, ZSigninFormState } from "@/type";
+import { TSigninFormState, ZSigninFormState } from "@/types";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import useToast from "@/hooks/useToast";

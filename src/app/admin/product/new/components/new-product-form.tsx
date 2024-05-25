@@ -1,6 +1,6 @@
 "use client";
 import { useForm, Controller } from "react-hook-form";
-import { TProduct, ZProduct } from "@/type";
+import { TProduct, ZProduct } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { trpc } from "@/utils/trpc";
 import Input from "@/components/ui/input";
@@ -30,7 +30,7 @@ const NewProductForm = () => {
   } = useForm<TProduct>({
     resolver: zodResolver(ZProduct),
     defaultValues: {
-      price: 0,
+      price: 0.0,
       quantity: 0,
     },
   });

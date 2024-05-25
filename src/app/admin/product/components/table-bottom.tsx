@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { TProduct } from "@/type";
+import { TProduct } from "@/types";
 
 interface TableBottomProps {
   product: TProduct;

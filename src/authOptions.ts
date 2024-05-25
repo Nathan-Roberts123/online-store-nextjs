@@ -64,6 +64,22 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      if (session) {
+        session.user.id = token.id;
+      }
+      return session;
+    },
+
+    async jwt({ token, account, profile, user }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+  },
   pages: {
     signIn: "/auth/signin",
   },

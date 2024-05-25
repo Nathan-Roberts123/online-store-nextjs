@@ -92,20 +92,30 @@ enum Status {
 }
 
 model Product {
-  id       String @id @default(cuid())
-  name     String
-  price    Float
-  image    String
-  status   Status
-  suk      String
-  quantity Int
-  Cart     Cart[]
+  id          String        @id @default(cuid())
+  name        String
+  price       Float
+  image       String
+  status      Status
+  suk         String
+  quantity    Int
+  CartProduct CartProduct[]
+}
+
+model CartProduct {
+  id      String  @id @default(cuid())
+  cart    Cart    @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  productId String
+  cartId    String
 }
 
 model Cart {
-  id      String    @id @default(cuid())
-  product Product[]
+  id String @id @default(cuid())
 
   User   User   @relation(fields: [userId], references: [id])
   userId String @unique
+
+  CartProduct CartProduct[]
 }

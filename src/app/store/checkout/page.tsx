@@ -12,7 +12,8 @@ export default function Checkout() {
 
   useEffect(() => {
     clientSecretMutation.mutate({ amount: 50 });
-  }, [clientSecretMutation]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (!clientSecretMutation.data) {
     return;
@@ -21,7 +22,7 @@ export default function Checkout() {
   return (
     <>
       {clientSecretMutation.data.clientSecret && stripePromise && (
-        <div className="flex justify-center items-center h-full">
+        <div className="flex justify-center py-6">
           <Elements
             stripe={stripePromise}
             options={{ clientSecret: clientSecretMutation.data.clientSecret }}

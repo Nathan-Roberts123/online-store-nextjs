@@ -1,4 +1,4 @@
-import { ZUser } from "@/type";
+import { ZUser } from "@/types";
 import { procedure, router } from "../trpc";
 import prisma from "@/db";
 import { v4 as uuidv4 } from "uuid";

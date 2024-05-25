@@ -12,8 +12,10 @@ jobs:
     steps:
       - name: Log version 12
         run: node --version
-      - name: Updated node
-        run: npm install -g n lts
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
       - name: Checkout
         uses: actions/checkout@v2
       - name: Log version

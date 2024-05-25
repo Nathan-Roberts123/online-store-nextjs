@@ -10,7 +10,7 @@ jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
     steps:
-      - name: Log version 1
+      - name: Log version 12
         run: node --version
       - name: Checkout
         uses: actions/checkout@v2

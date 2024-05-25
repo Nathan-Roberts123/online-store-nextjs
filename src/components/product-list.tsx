@@ -15,7 +15,7 @@ const ProductList = () => {
     );
   }
 
-  if (!data) {
+  if (data && !data.length) {
     return (
       <div className="flex h-full justify-center items-center">
         No Products Are Available

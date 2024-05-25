@@ -13,6 +13,9 @@ const nextConfig = {
       {
         hostname: "online-store-dev-bkt.s3.us-east-1.amazonaws.com",
       },
+      {
+        hostname: "online-store-prd-bkt.s3.us-east-1.amazonaws.com",
+      },
     ],
   },
 };

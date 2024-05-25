@@ -13,7 +13,7 @@ jobs:
       - name: Log version 12
         run: node --version
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Log version
         run: node --version
       - name: Install Vercel CLI

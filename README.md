@@ -1,6 +1,12 @@
 
 ![Blue Store (28 05 2024 21_32)](https://github.com/Nathan-Roberts123/online-store-nextjs/assets/138929167/1ac3eaf4-7aab-4331-94c3-eb974b6ccfab)
 
+![Blue Store (28 05 2024 21_37)](https://github.com/Nathan-Roberts123/online-store-nextjs/assets/138929167/079b3c59-ce6b-48fb-9ef1-01aae8e09671)
+
+Admin Pages
+https://onlinestore-nathancody.vercel.app/admin
+
+![Blue Store (28 05 2024 21_40)](https://github.com/Nathan-Roberts123/online-store-nextjs/assets/138929167/de299b06-b90d-472f-b352-200debe61200)
 
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).

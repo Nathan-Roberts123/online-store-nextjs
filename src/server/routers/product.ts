@@ -6,19 +6,23 @@ import { s3 } from "@/utils/s3/config";
 import { v4 as uuidv4 } from "uuid";
 import { createPresignedUrlWithClient } from "@/utils/s3/utils";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
-
-const ctxError: TRPCError = {
-  name: "TRPCError",
-  code: "BAD_REQUEST",
-  message: "user id was not found: null | undefined",
-};
 
 const productRouter = router({
   getProducts: procedure.query(() => {
     const products = prisma.product.findMany();
     return products;
   }),
+
+  getProduct: procedure
+    .input(z.object({ id: z.string() }))
+    .query(({ input }) => {
+      const product = prisma.product.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      return product;
+    }),
 
   createProduct: procedure.input(ZFProuct).mutation(async ({ input }) => {
     const signedUrl = await createPresignedUrlWithClient(
@@ -27,16 +31,18 @@ const productRouter = router({
       uuidv4()
     );
 
-    const res = await fetch(signedUrl, {
-      method: "PUT",
-      body: input.image,
-      headers: {
-        "Content-Type": input.image.type,
-      },
-    });
+    if (typeof input.image === "object") {
+      const res = await fetch(signedUrl, {
+        method: "PUT",
+        body: input.image,
+        headers: {
+          "Content-Type": input.image.type,
+        },
+      });
 
-    if (!res.ok) {
-      throw new Error("Could not PUT file in S3 Bucket");
+      if (!res.ok) {
+        throw new Error("Could not PUT file in S3 Bucket");
+      }
     }
 
     const product = prisma.product.create({
@@ -48,63 +54,59 @@ const productRouter = router({
     return product;
   }),
 
-  addToCart: procedure
-    .input(z.object({ productId: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      if (!ctx.user.id) {
-        throw ctx;
-      }
-      let cart = await prisma.cart.findUnique({
+  deleteProduct: procedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input }) => {
+      const product = await prisma.product.delete({
         where: {
-          userId: ctx.user.id,
+          id: input.id,
         },
       });
-      if (!cart) {
-        cart = await prisma.cart.create({
-          data: {
-            User: {
-              connect: {
-                id: ctx.user.id,
-              },
-            },
-          },
-        });
-      }
-
-      const cartProduct = await prisma.cartProduct.create({
-        data: {
-          cart: {
-            connect: {
-              id: cart.id,
-            },
-          },
-          product: {
-            connect: {
-              id: input.productId,
-            },
-          },
-        },
-      });
-
-      return cartProduct;
+      return product;
     }),
 
-  getCartTotal: procedure.query(async ({ ctx }) => {
-    if (!ctx) {
-      throw ctxError;
-    }
-    const cart = await prisma.cart.findUnique({
-      where: {
-        userId: ctx.user.id,
-      },
-    });
-    const products = await prisma.cartProduct.findMany({
-      where: {
-        cartId: cart?.id,
-      },
-    });
+  updateProduct: procedure.input(ZFProuct).mutation(async ({ input }) => {
+    let signedUrl: string | null = null;
+    if (typeof input.image == "object") {
+      if (input.image.size) {
+        signedUrl = await createPresignedUrlWithClient(
+          s3,
+          env.AWS_BUCKET_NAME,
+          uuidv4()
+        );
 
-    return { total: products.length };
+        const res = await fetch(signedUrl, {
+          method: "PUT",
+          body: input.image,
+          headers: {
+            "Content-Type": input.image.type,
+          },
+        });
+
+        if (!res.ok) {
+          throw new Error("Could not PUT file in S3 Bucket");
+        }
+      }
+    }
+
+    const product = prisma.product.update({
+      where: {
+        id: input.id,
+      },
+      data: !!signedUrl
+        ? {
+            ...input,
+            image: signedUrl.split("?")[0],
+          }
+        : {
+            name: input.name,
+            quantity: input.quantity,
+            price: input.price,
+            suk: input.suk,
+            status: input.status,
+          },
+    });
+    return product;
   }),
 });
 

@@ -1,21 +1,34 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
-import { trpc } from "@/utils/trpc";
 import Link from "next/link";
+import { useContext } from "react";
+import { TotalItemsContext } from "@/providers/total-items-provider";
+import Image from "next/image";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  const { data } = trpc.product.getCartTotal.useQuery();
+  const totalValue = useContext(TotalItemsContext);
 
   return (
     <header className="relative z-10 bg-white border-b border-gray border-solid py-5 px-8 pr-8">
       <div className="flex justify-between items-center">
-        <h3>LOGO</h3>
+        <Link href="/store">
+          <div className="flex gap-2 items-center">
+            <Image src="/Blue/1.svg" width={40} height={40} alt="Logo" />
+            <Image
+              className="hidden md:block"
+              src="/shop.png"
+              width={200}
+              height={10}
+              alt="Logo"
+            />
+          </div>
+        </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-8">
           <Link href="/store/cart" className="flex items-center gap-1">
             <p className="flex h-2 w-2 items-center justify-center rounded-full bg-red-500 p-3 text-xs text-white">
-              {data?.total}
+              {totalValue}
             </p>
 
             <svg
@@ -34,7 +47,14 @@ const Navbar = () => {
             </svg>
           </Link>
           <span>{session?.user?.name}</span>
-          <button className="border-none bg-none" onClick={() => signOut()}>
+          <button
+            className="border-none bg-none hover:bg-slate-200 hover:text-white px-4 py-2 rounded-md"
+            onClick={() =>
+              signOut({
+                callbackUrl: `${window.location.origin}/auth/signin`,
+              })
+            }
+          >
             Logout
           </button>
         </div>

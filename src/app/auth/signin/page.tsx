@@ -31,7 +31,7 @@ const Signin = () => {
     }
 
     if (res.ok) {
-      router.push("/store");
+      router.push("/");
       return;
     }
 

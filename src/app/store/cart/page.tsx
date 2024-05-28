@@ -1,9 +1,22 @@
+"use client";
 import React from "react";
 import TotalSection from "./components/total-section";
 import Link from "next/link";
 import CartProduct from "./components/cart-product";
+import { useContext } from "react";
+import { CartContext } from "@/providers/cart-provider";
+import { useSession } from "next-auth/react";
 
 const Cart = () => {
+  const data = useContext(CartContext);
+  let totalPrice = 0;
+
+  data.length &&
+    data.forEach((item) => {
+      const prdPrice = item.product.price * item.quantity;
+      totalPrice += prdPrice;
+    });
+
   return (
     <section className="py-4 relative">
       <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto">
@@ -17,10 +30,20 @@ const Cart = () => {
           </p>
         </div>
 
-        <CartProduct />
-        <CartProduct />
-        <CartProduct />
-        <TotalSection />
+        {data ? (
+          data.map((item) => {
+            return (
+              <CartProduct
+                key={item.product.id}
+                product={item.product}
+                quantity={item.quantity}
+              />
+            );
+          })
+        ) : (
+          <h1 className="flex justify-center p-4">Empty Cart</h1>
+        )}
+        <TotalSection totalPrice={totalPrice} />
 
         <div className="flex items-center flex-col sm:flex-row justify-center gap-3 mt-8">
           <Link

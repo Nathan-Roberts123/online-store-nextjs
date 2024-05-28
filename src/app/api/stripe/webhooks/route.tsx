@@ -5,6 +5,9 @@ import { render } from "@react-email/render";
 import { SES } from "@aws-sdk/client-ses";
 import { Email } from "@/emails/payment-success";
 import { env } from "@/env";
+import prisma from "@/db";
+import { TOrder } from "@/types";
+import { v4 as uuidv4 } from "uuid";
 
 const ses = new SES({ region: env.AWS_SES_REGION });
 
@@ -25,7 +28,7 @@ const sendEmail = async () => {
       },
       Subject: {
         Charset: "UTF-8",
-        Data: "hello world",
+        Data: "BlueShop",
       },
     },
   };
@@ -33,7 +36,26 @@ const sendEmail = async () => {
   await ses.sendEmail(params);
 };
 
-const POST = async (req: NextRequest) => {
+async function createOrder(order: TOrder) {
+  await prisma.order.create({
+    data: {
+      orderId: order.orderId,
+      totalPrice: order.totalPrice,
+      customerEmail: order.customerEmail,
+      quantity: order.quantity,
+    },
+  });
+}
+
+async function clearCart(cartId: string) {
+  await prisma.cartProduct.deleteMany({
+    where: {
+      cartId: cartId,
+    },
+  });
+}
+
+const POST = async (req: Request) => {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");
   const webHookSecret = env.WEBHOOK_SECRET!;
@@ -41,7 +63,7 @@ const POST = async (req: NextRequest) => {
   let event: Stripe.Event;
 
   if (!sig) {
-    return NextResponse.json({ message: "Sig was not found" }, { status: 400 });
+    return NextResponse.json({ message: "Sig was not found" }, { status: 500 });
   }
 
   try {
@@ -56,8 +78,15 @@ const POST = async (req: NextRequest) => {
     switch (event["type"]) {
       case "payment_intent.succeeded":
         intent = event.data.object;
+        const metadata = intent.metadata;
         await sendEmail();
-        console.log("email sent....");
+        await clearCart(metadata["cartId"]);
+        await createOrder({
+          quantity: Number(metadata["quantity"]),
+          totalPrice: intent.amount,
+          customerEmail: metadata["email"],
+          orderId: uuidv4(),
+        });
         break;
       case "payment_intent.payment_failed":
         intent = event.data.object;
@@ -68,9 +97,8 @@ const POST = async (req: NextRequest) => {
         }
         throw new Error("Payment intent failed");
     }
-  } catch (e) {
-    console.log("send: ", e);
-    return NextResponse.json({ message: e }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ message: error }, { status: 500 });
   }
 
   return NextResponse.json({ status: 200 });

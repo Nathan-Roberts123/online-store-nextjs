@@ -49,7 +49,7 @@ const Success = () => {
 
   return (
     <>
-      <h1>Thank you!</h1>
+      <h1>Thank you for shoping!</h1>
       <a href="/">home</a>
       <div
         id="messages"

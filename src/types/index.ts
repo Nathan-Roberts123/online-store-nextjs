@@ -37,6 +37,7 @@ export const ZSigninFormState = z.object({
 export type TSigninFormState = z.infer<typeof ZSigninFormState>;
 
 export const ZProduct = z.object({
+  id: z.string(),
   name: z.string().min(2),
   price: z.coerce.number(),
   image: z
@@ -57,15 +58,16 @@ export const ZProduct = z.object({
 export type TProduct = z.infer<typeof ZProduct>;
 
 export const ZCart = z.object({
-  product: ZProduct.array(),
+  products: ZProduct.array(),
 });
 
 export type TCart = z.infer<typeof ZCart>;
 
 export const ZFProuct = zfd.formData({
+  id: zfd.text().optional(),
   name: zfd.text(),
   price: zfd.numeric(),
-  image: zfd.file(),
+  image: z.any(),
   suk: zfd.text(),
   status: zfd.text(z.enum(statusValues)),
   quantity: zfd.numeric(),
@@ -78,3 +80,20 @@ export const ZUser = z.object({
 });
 
 export type TUser = z.infer<typeof ZUser>;
+
+export type cartItem = {
+  quantity: number;
+  product: TProduct;
+  cartId: string;
+  productId: string;
+};
+
+export const ZOrder = z.object({
+  orderId: z.string(),
+  totalPrice: z.number(),
+  customerEmail: z.string(),
+  quantity: z.number(),
+  createdAt: z.string().optional(),
+});
+
+export type TOrder = z.infer<typeof ZOrder>;
